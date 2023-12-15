@@ -1,6 +1,6 @@
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
-import { access, constants } from 'fs/promises';
+import { access, constants, stat } from 'fs/promises';
 
 export function getDirName(url) {
   const __filename = fileURLToPath(url);
@@ -15,4 +15,9 @@ export async function isDirOrFileExists(path) {
   } catch {
     return false;
   }
+}
+
+export async function isFile(path) {
+  const stats = await stat(path);
+  return stats.isFile();
 }
