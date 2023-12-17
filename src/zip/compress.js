@@ -1,6 +1,7 @@
 import { join } from 'node:path';
 import { createReadStream, createWriteStream } from 'node:fs';
 import { createGzip } from 'node:zlib';
+import { pipeline } from 'node:stream';
 
 import { getDirName } from '../shared/helpers.js';
 
@@ -13,7 +14,11 @@ const compress = async () => {
     const gzip = createGzip();
     const output = createWriteStream(archivePath);
 
-    input.pipe(gzip).pipe(output);
+    pipeline(input, gzip, output, (err) => {
+       if (err) {
+           console.error('An error occurred: ', err);
+       }
+    });
 };
 
 await compress();
